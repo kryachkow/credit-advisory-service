@@ -1,0 +1,1 @@
+docker run --name task-postgres -e POSTGRES_PASSWORD=creditpassword -p 5432:5432 -d postgres
