@@ -10,9 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class AdvisorServiceImpl implements AdvisorService {
@@ -41,10 +38,14 @@ public class AdvisorServiceImpl implements AdvisorService {
 
     private Application getOldestApplicationForAdvisor(Advisor advisor) throws AssignationException {
         return applicationRepository
-                .findAllNewByMoneyAmountSortedByDate(
-                        advisor.getMinCreditAmount(),
-                        advisor.getMaxCreditAmount()
-                ).orElseThrow(() ->
+                .findAllApplicationsByStatusFromOldest(
+                        Application.Status.NEW
+                )
+                .stream()
+                .filter(application -> application.getMoneyAmount() >= advisor.getMinCreditAmount()
+                        && application.getMoneyAmount() <= advisor.getMaxCreditAmount())
+                .findFirst()
+                .orElseThrow(() ->
                         new AssignationException("There is no NEW applications with proper parameters for advisor with id " + advisor.getId()));
     }
 }

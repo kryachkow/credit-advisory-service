@@ -8,11 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,19 +31,11 @@ public class Advisor extends SystemUser {
 
 
     public Long getMinCreditAmount() {
-        return switch (this.advisorRole) {
-            case ASSOCIATE -> 0L;
-            case PARTNER -> 10000L;
-            case SENIOR -> 50001L;
-        };
+        return advisorRole.minAmount;
     }
 
     public Long getMaxCreditAmount() {
-        return switch (this.advisorRole) {
-            case ASSOCIATE -> 9999L;
-            case PARTNER -> 50000L;
-            case SENIOR -> Long.MAX_VALUE;
-        };
+        return advisorRole.maxAmount;
     }
 
 
@@ -56,8 +44,12 @@ public class Advisor extends SystemUser {
     }
 
 
+    @RequiredArgsConstructor
+    @Getter
     public enum AdvisorRole {
-        ASSOCIATE, PARTNER, SENIOR
+        ASSOCIATE(0L, 9999L), PARTNER(1000L, 50000L), SENIOR(50001L, Long.MAX_VALUE);
+        private final Long minAmount;
+        private final Long maxAmount;
     }
 
 }

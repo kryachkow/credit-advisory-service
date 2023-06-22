@@ -2,12 +2,7 @@ package com.my.creditadvisoryservice.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -31,7 +26,8 @@ public class Applicant extends SystemUser {
     private Address address;
 
     @Setter(AccessLevel.PRIVATE)
-    @OneToMany(mappedBy = "applicant", fetch = FetchType.LAZY)
+    @ElementCollection
+    @CollectionTable(name = "phone")
     private List<Phone> phones = new ArrayList<>();
 
     @OneToMany(mappedBy = "applicant", fetch = FetchType.LAZY)

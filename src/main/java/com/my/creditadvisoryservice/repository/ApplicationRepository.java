@@ -5,12 +5,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-
-import java.util.Optional;
+import java.util.List;
 
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
 
-    @Query("select a from Application a  where a.moneyAmount >= :minValue and  a.moneyAmount <= :maxValue and a.status = 'NEW' order by a.createdOn asc LIMIT 1")
-    Optional<Application> findAllNewByMoneyAmountSortedByDate(@Param("minValue") Long minValue, @Param("maxValue") Long maxValue);
+    @Query("select a from Application a  where a.status = :status order by a.createdOn asc")
+    List<Application> findAllApplicationsByStatusFromOldest(@Param("status") Application.Status status);
 
 }
